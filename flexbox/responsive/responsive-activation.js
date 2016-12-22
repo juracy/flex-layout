@@ -65,7 +65,8 @@ export var ResponsiveActivation = (function () {
          * Get the currently activated @Input value or the fallback default @Input value
          */
         get: function () {
-            return this._lookupKeyValue(this.activatedInputKey) || this._options.defaultValue;
+            var key = this.activatedInputKey;
+            return this._hasKeyValue(key) ? this._lookupKeyValue(key) : this._options.defaultValue;
         },
         enumerable: true,
         configurable: true
@@ -77,6 +78,7 @@ export var ResponsiveActivation = (function () {
         this._subscribers.forEach(function (link) {
             link.unsubscribe();
         });
+        this._subscribers = [];
     };
     /**
      * For each *defined* API property, register a callback to `_onMonitorEvents( )`
@@ -176,6 +178,10 @@ export var ResponsiveActivation = (function () {
      */
     ResponsiveActivation.prototype._lookupKeyValue = function (key) {
         return this._options.inputKeys[key];
+    };
+    ResponsiveActivation.prototype._hasKeyValue = function (key) {
+        var value = this._options.inputKeys[key];
+        return typeof value !== 'undefined';
     };
     return ResponsiveActivation;
 }());
